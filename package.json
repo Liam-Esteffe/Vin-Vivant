@@ -1,0 +1,17 @@
+{
+    "name": "VinVivant",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "format": "turbo run format --parallel",
+        "build": "turbo run build --parallel"
+
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "turbo": "^1.6.3"
+    }
+}

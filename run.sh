@@ -1,0 +1,1 @@
+pnpm -r --parallel run dev
