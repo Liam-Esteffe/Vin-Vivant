@@ -1,0 +1,38 @@
+<section class="mt-10 flex flex-col items-center justify-center bg-white">
+  <!-- Carte cadeau -->
+  <div class="card-container w-80 h-52 mb-10 relative group perspective">
+    <div class="card relative w-full h-full transform-style-preserve transform transition-transform duration-700 group-hover:rotate-y-180">
+      <!-- Face Avant -->
+      <div class="card-front absolute w-full h-full bg-white shadow-xl rounded-lg flex flex-col items-center justify-center border border-gray-300">
+        <h2 class="text-2xl font-bold text-gray-700">Carte Cadeau</h2>
+        <p class="text-xl text-gray-500 mt-2">{{ price || "10" }} €</p>
+      </div>
+      <!-- Face Arrière -->
+      <div class="card-back absolute w-full h-full bg-gray-800 shadow-xl rounded-lg flex items-center justify-center transform rotate-y-180">
+        <img src="../../../assets/logo.jpeg" alt="Image carte cadeau" class="w-full h-full object-cover rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- Input et Bouton -->
+  <div class="text-center">
+    <input 
+      placeholder="10 €" 
+      class="border border-gray-400 w-52 h-12 p-2 text-center rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+      [(ngModel)]="price">
+    <p class="font-medium text-xl mt-4">Je souhaite une carte cadeau d'une valeur : <span class="font-bold">{{ price || "10" }} €</span></p>
+    
+    <button
+    (click)="showToast()"
+      class="
+      mt-6 w-52 border-2 border-green-500
+      bg-green-500 text-white font-semibold p-3
+      rounded-lg transition hover:scale-105
+      hover:bg-green-600
+      duration-200"
+    >
+      Ajouter au panier
+    </button>
+  </div>
+  <p-toast position="top-right"></p-toast>
+</section>

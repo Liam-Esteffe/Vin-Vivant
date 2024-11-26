@@ -1,0 +1,29 @@
+<div class="font-bold flex justify-center  text-center text-3xl mt-5">
+  <h1 class=" border-4 border-black p-5 w-96">Nos Bières</h1>
+</div>
+
+<div class="font-bold flex justify-center  text-center text-sm mt-10">
+  <img class="h-52" src="./assets/deelar.png">
+  <p class=" p-20 w-96">nous contacter pour ajouter des bières toutes fraîches à votre commande </p>
+</div>
+
+<div class="relative w-full h-40 overflow-hidden mt-20">
+  <div class="flex animate-slide">
+    <div class="flex whitespace-nowrap space-x-10">
+      <img *ngFor="let logo of beerLogos_1" [src]="'assets/beer/' + logo" alt="Beer Logo" class="inline-block space-x-10 w-32 h-32 transition-transform duration-500 transform hover:scale-110" />
+      <img *ngFor="let logo of beerLogos_1" [src]="'assets/beer/' + logo" alt="Beer Logo" class="inline-block space-x-10 w-32 h-32 transition-transform duration-500 transform hover:scale-110" />
+      <img *ngFor="let logo of beerLogos_1" [src]="'assets/beer/' + logo" alt="Beer Logo" class="inline-block space-x-10 w-32 h-32 transition-transform duration-500 transform hover:scale-110" />
+    
+    </div>
+  </div>
+</div>
+
+<div class="relative w-full h-40 overflow-hidden mt-20">
+  <div class="flex animate-slide-reverse">
+    <div class="flex whitespace-nowrap space-x-10">
+      <img *ngFor="let logo of beerLogos_2" [src]="'assets/beer/' + logo" alt="Beer Logo" class="inline-block space-x-8 w-32 h-32 transition-transform duration-500 transform hover:scale-110" />
+      <img *ngFor="let logo of beerLogos_2" [src]="'assets/beer/' + logo" alt="Beer Logo" class="inline-block space-x-8 w-32 h-32 transition-transform duration-500 transform hover:scale-110" />
+    </div>
+  </div>
+</div>
+

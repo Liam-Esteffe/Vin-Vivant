@@ -1,0 +1,116 @@
+<!-- component -->
+<!-- Container principal -->
+<div class="bg-white relative flex items-center justify-center overflow-visible z-50">
+  <p-toast position="top-right"></p-toast>
+
+  <div class="relative mx-auto h-full px-4 pb-20 md:pb-10 sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8">
+    <div class="flex flex-col items-center justify-between lg:flex-row py-16">
+      <!-- Section de recherche -->
+      <div class="relative w-full">
+        <div class="lg:max-w-xl lg:pr-5 relative z-40">
+          <h2 class="mb-6 max-w-lg text-5xl font-semibold leading-snug tracking-tight text-g1 sm:text-7xl sm:leading-snug">
+            Nos
+            <span
+              class="my-1 inline-block border-b-8 border-g4 bg-white px-4 font-bold text-g4 animate__animated animate__flash text-red-700"
+            >
+              Dégustations
+            </span>
+          </h2>
+          <p class="text-base font-semibold text-gray-700">
+            Retrouve nos différentes dégustation en boutique !
+          </p>
+          <!-- Dropdown -->
+
+        </div>
+      </div>
+
+      <!-- Section image -->
+      <div class="relative hidden lg:ml-32 lg:block lg:w-1/2 z-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="my-6 mx-auto h-10 w-10 animate-bounce rounded-full bg-white p-2 lg:hidden"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+        </svg>
+        <div class="abg-orange-400 mx-auto w-fit overflow-hidden rounded-[6rem] rounded-br-none rounded-tl-none">
+          <img class="h-auto" src="../../../../assets/deg2.jpeg" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <section *ngIf="!is_loading" class="flex flex-col p-4 md:p-20 space-y-4 md:space-y-0 md:space-x-2">
+    <div *ngFor="let item of events" class="p-2">
+      <div class="bg-gray-50 shadow-xl rounded p-4 md:p-20 w-full">
+        <h1 class="font-bold text-center text-lg md:text-xl">{{ item.name }}</h1>
+
+        <div class="flex justify-center space-x-2 mt-2">
+          <span *ngIf="item.place > 0" class="bg-red-800 text-white rounded-full p-2 text-xs md:text-sm font-semibold">Déjà {{
+            item.inscrit }} inscrit</span>
+          <span *ngIf="item.place > 0" class="bg-black text-white rounded-full p-2 text-xs md:text-sm font-semibold">{{
+            item.place }} places disponible</span>
+          <span *ngIf="item.place <= 0 || item.inscrit >= item.place"
+            class="bg-red-700 text-white rounded-full p-2 text-xs md:text-sm font-semibold">Aucune place disponible</span>
+        </div>
+
+        <br>
+
+        <span class="bg-gray-100 text-gray-800 border-2 border-gray-300 rounded-full px-6 py-2 text-sm md:text-md font-medium">{{ item.date }}</span>
+
+        <button *ngIf="item.place > item.inscrit" (click)="test = item.slug"
+          class="mt-6 block w-full rounded-xl border-4 border-black bg-white text-black font-bold p-4 transition hover:scale-105 hover:bg-black hover:text-white duration-200">
+          Je souhaite rejoindre cet événement
+        </button>
+
+        <button *ngIf="item.place <= 0 || item.inscrit >= item.place"
+          class="mt-6 block w-full rounded-xl border-4 border-white bg-red-700 text-white font-bold p-4 transition hover:scale-105 hover:bg-red-800 hover:text-white duration-200">
+          Plus de places disponible
+        </button>
+
+        <div *ngIf="test == item.slug" class="p-5 sm:p-10 w-full max-w-md mx-auto">
+          <form [formGroup]="userForm" (ngSubmit)="buildPostRequest(item.slug)" class="space-y-6">
+            <!-- Input pour le nom -->
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+              <input formControlName="name" type="text" id="name" placeholder="Votre nom"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+              <div *ngIf="userForm.controls['name'].invalid && userForm.controls['name'].touched"
+                class="text-red-500 text-xs">Le nom est requis et doit comporter au moins 3 caractères.</div>
+            </div>
+
+            <!-- Input pour le téléphone -->
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Téléphone</label>
+              <input formControlName="phone" type="tel" id="phone" placeholder="Votre téléphone"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+              <div *ngIf="userForm.controls['phone'].invalid && userForm.controls['phone'].touched"
+                class="text-red-500 text-xs">Le téléphone doit comporter 10 chiffres.</div>
+            </div>
+
+            <!-- Input pour l'email -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input formControlName="email" type="email" id="email" placeholder="Votre email"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+              <div *ngIf="userForm.controls['email'].invalid && userForm.controls['email'].touched"
+                class="text-red-500 text-xs">Veuillez entrer un email valide.</div>
+            </div>
+
+            <!-- Bouton pour envoyer la demande -->
+            <div>
+              <button type="submit" [disabled]="userForm.invalid"
+                class="w-full rounded-full px-4 py-2 border-4 border-black bg-white text-black font-bold p-4 transition hover:scale-105 hover:bg-black hover:text-white duration-200">
+                Je confirme mon inscription
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>

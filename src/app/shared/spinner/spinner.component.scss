@@ -1,0 +1,26 @@
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff; /* Couleur de fond */
+  }
+  
+  .spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid rgba(155, 28, 49, 0.2); /* Couleur bordeaux avec transparence */
+    border-top: 8px solid #9b1c31; /* Couleur bordeaux */
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

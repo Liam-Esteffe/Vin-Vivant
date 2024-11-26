@@ -1,0 +1,145 @@
+<!-- component -->
+<!-- Container principal -->
+<div class="bg-white relative flex items-center justify-center overflow-visible z-50">
+  <div class="relative mx-auto h-full px-4 pb-20 md:pb-10 sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8">
+    <div class="flex flex-col items-center justify-between lg:flex-row py-16">
+      <!-- Section de recherche -->
+      <div class="relative w-full">
+        <div class="lg:max-w-xl lg:pr-5 relative z-40">
+          <h2 class="mb-6 max-w-lg text-5xl font-light leading-snug tracking-tight text-g1 sm:text-7xl sm:leading-snug">
+            Catégorie
+            <span
+              class="my-1 inline-block border-b-8 border-g4 bg-white px-4 font-bold text-g4 animate__animated animate__flash text-red-700"
+            >
+              Epicerie
+            </span>
+          </h2>
+          <p class="text-base font-light text-gray-700">
+            Dans cette catégorie, tu pourras retrouver notre épicerie en ligne et autres joyeusetés !
+          </p>
+          <div class="mt-10 flex flex-col items-center md:flex-row">
+            <p-floatLabel class="w-full">
+              <input
+                class="border border-gray-300 w-full rounded-full px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                pInputText
+                id="search-product"
+                [(ngModel)]="value"
+                placeholder=" "
+                (input)="onSearchChange()"
+              />
+              <label for="search-product" class="text-gray-500">Rechercher un produit</label>
+            </p-floatLabel>
+          </div>
+
+          <!-- Dropdown -->
+          <div class="relative mt-4">
+            <div *ngIf="filteredProducts.length > 0" class="absolute left-0 top-full w-full z-50">
+              <ul class="bg-white border border-gray-300 rounded-lg shadow-lg">
+                <li
+                  *ngFor="let product of filteredProducts"
+                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  [routerLink]="'/product-overview/' + product.id"
+                  [state]="{ data: product }"
+                  >
+                  {{ product.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section image -->
+      <div class="relative hidden lg:ml-32 lg:block lg:w-1/2 z-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="my-6 mx-auto h-10 w-10 animate-bounce rounded-full bg-white p-2 lg:hidden"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+        </svg>
+        <div class="abg-orange-400 mx-auto w-fit overflow-hidden rounded-[6rem] rounded-br-none rounded-tl-none">
+          <img class="h-96" src="https://levinvivant.com/media/uploads/IMG_8115.jpg" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Paginator -->
+
+<!-- Liste des produits -->
+<section *ngIf="!is_loading" class="p-20 flex flex-wrap justify-center space-x-2">
+  <div
+    *ngFor="let item of products.slice(first, first + rows)"
+    class="p-2"
+  >
+    <a
+      [routerLink]="'/product-overview/' + item.id"
+      [state]="{ data: item }"
+      class="group relative block overflow-hidden w-96 rounded-lg shadow-lg"
+    >
+      <img
+        [src]="item.get_image"
+        alt=""
+        class="w-96 object-cover transition duration-500 group-hover:scale-105 sm:h-96"
+      />
+
+      <div class="relative border border-gray-100 bg-white p-6">
+        <span
+          class="whitespace-nowrap rounded-lg text-teal-700 font-bold bg-teal-200 px-3 py-1.5 text-xs"
+        >
+          {{ item.alcool_degree }} degrés
+        </span>
+        <span
+          *ngIf="item.in_stock"
+          class="ml-3 whitespace-nowrap rounded-lg bg-green-100 font-bold text-green-700 px-3 py-1.5 text-xs"
+        >
+          En stock
+        </span>
+        <span
+          *ngIf="!item.in_stock"
+          class="ml-3 whitespace-nowrap rounded-lg bg-red-100 font-bold text-red-700 px-3 py-1.5 text-xs"
+        >
+          En rupture
+        </span>
+
+        <h3 class="mt-4 text-lg font-medium text-gray-900">
+          {{ item.name.length > 35 ? (item.name | slice: 0: 35) + '...' : item.name }}
+        </h3>
+
+        <p class="mt-1.5 text-sm text-gray-700">{{ item.price }} €</p>
+
+        <form class="mt-4">
+          <button
+            class="
+            rounded-full
+            block w-full border-4 border-black
+            bg-white text-black font-bold p-4
+            transition hover:scale-105
+            hover:bg-black hover:text-white
+            duration-200
+          "
+          >
+            Ajouter au panier
+          </button>
+        </form>
+      </div>
+    </a>
+  </div>
+</section>
+<p-paginator
+  class="relative z-10"
+  (onPageChange)="onPageChange($event)"
+  [first]="first"
+  [rows]="rows"
+  [totalRecords]="products.length"
+  [rowsPerPageOptions]="[10, 20, 30]"
+  [showCurrentPageReport]="true"
+></p-paginator>
+
+<!-- Spinner -->
+<app-spinner *ngIf="is_loading"></app-spinner>

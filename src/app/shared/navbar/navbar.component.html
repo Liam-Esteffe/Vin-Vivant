@@ -1,0 +1,44 @@
+<nav class="border-b-2 border-gray-300 bg-white w-full flex justify-between items-center mx-auto px-8 h-20">
+  <!-- Left links (desktop) -->
+  <div class="hidden md:flex space-x-4">
+    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="home">Accueil</a>
+    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="vin">Vin</a>
+    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="beer">Bière</a>
+    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="spiritueux">Spiritueux</a>
+    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="epicerie">Épicerie</a>
+  </div>
+
+  <!-- Logo (centered) -->
+  <div class="absolute left-1/2 transform -translate-x-1/2">
+    <a routerLink="home">
+      <img 
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.scorpmedia.fr%2Fwp-content%2Fuploads%2F2022%2F04%2FLOGO.jpg&f=1&nofb=1" 
+        class="h-16" alt="Logo">
+    </a>
+  </div>
+
+  <!-- Right: Cart link -->
+  <div class="flex items-center space-x-2">
+    <a class="h-10 inline-flex items-center space-x-1 py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="/cart">
+      <i class="fa-solid fa-basket-shopping"></i>
+    </a>
+  </div>
+
+  <!-- Hamburger Button for mobile -->
+  <div class="md:hidden flex items-center">
+    <button routerLink="/cart" (click)="toggleMenu()" class="text-gray-700 hover:text-gray-900">
+      <i class="fas fa-bars fa-2x"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu (hidden by default) -->
+<div [ngClass]="{'hidden': !isMenuOpen, 'absolute top-0 left-0 w-full bg-white shadow-lg py-4 z-10': true}" class="md:hidden">
+  <div class="flex flex-col items-center space-y-6 py-4 px-6">
+    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="home">Accueil</a>
+    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="vin">Vin</a>
+    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="beer">Bière</a>
+    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="spiritueux">Spiritueux</a>
+    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="epicerie">Épicerie</a>
+  </div>
+</div>

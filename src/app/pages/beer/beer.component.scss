@@ -1,0 +1,28 @@
+@keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes slide-reverse {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-30%);
+    }
+  }
+  
+  .animate-slide {
+    display: flex;
+    animation: slide 20s linear infinite;
+  }
+
+    
+  .animate-slide-reverse {
+    display: flex;
+    animation: slide-reverse 20s linear infinite;
+  }
