@@ -1,7 +1,9 @@
 <app-navbar></app-navbar>
+<main [@routeAnimations]="prepareRoute(outlet)">
 
 
-<router-outlet></router-outlet>
+<router-outlet #outlet="outlet"></router-outlet>
+</main>
 
 
 <div class="mt-10">
@@ -44,7 +46,12 @@
         </svg>
         Facebook
       </a>
+      
       <div class="mt-4">
+        <a href="https://www.facebook.com" target="_blank" class="inline-flex items-center text-blue-700 font-medium hover:underline">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png" class="h-6 w-6 mr-2" alt="">
+          Instagram
+        </a>
       </div>
     </div>
   </div>

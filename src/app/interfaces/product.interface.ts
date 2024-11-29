@@ -9,6 +9,6 @@ export interface Product {
     in_stock: boolean,
     name: string,
     price: string,
-    region: number,
+    region: string,
     types: Array<number>
 }

@@ -1,4 +1,3 @@
-<!-- component -->
 <!-- Container principal -->
 <div class="bg-white relative flex items-center justify-center overflow-visible z-50">
   <div class="relative mx-auto h-full px-4 pb-20 md:pb-10 sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8">
@@ -6,18 +5,18 @@
       <!-- Section de recherche -->
       <div class="relative w-full">
         <div class="lg:max-w-xl lg:pr-5 relative z-40">
-          <h2 class="mb-6 max-w-lg text-5xl font-light leading-snug tracking-tight text-g1 sm:text-7xl sm:leading-snug">
+          <h2 class="mb-6 max-w-lg text-3xl sm:text-5xl font-light leading-snug tracking-tight text-g1 sm:leading-snug">
             Catégorie
             <span
-              class="my-1 inline-block border-b-8 border-g4 bg-white px-4 font-bold text-g4 animate__animated animate__flash text-red-700"
+              class="my-1 inline-block border-b-8 border-g4 bg-white px-4 font-bold text-g4 animate__animated animate__flash text-orange-700"
             >
-              Epicerie
+              Épicerie
             </span>
           </h2>
-          <p class="text-base font-light text-gray-700">
-            Dans cette catégorie, tu pourras retrouver notre épicerie en ligne et autres joyeusetés !
+          <p class="text-sm sm:text-base font-light text-gray-700">
+            Découvrez nos produits d'épicerie fine et autres joyeusetés !
           </p>
-          <div class="mt-10 flex flex-col items-center md:flex-row">
+          <div class="mt-10 flex flex-col items-center">
             <p-floatLabel class="w-full">
               <input
                 class="border border-gray-300 w-full rounded-full px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -30,49 +29,22 @@
               <label for="search-product" class="text-gray-500">Rechercher un produit</label>
             </p-floatLabel>
           </div>
-
-          <!-- Dropdown -->
-          <div class="relative mt-4">
-            <div *ngIf="filteredProducts.length > 0" class="absolute left-0 top-full w-full z-50">
-              <ul class="bg-white border border-gray-300 rounded-lg shadow-lg">
-                <li
-                  *ngFor="let product of filteredProducts"
-                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  [routerLink]="'/product-overview/' + product.id"
-                  [state]="{ data: product }"
-                  >
-                  {{ product.name }}
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
 
       <!-- Section image -->
       <div class="relative hidden lg:ml-32 lg:block lg:w-1/2 z-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="my-6 mx-auto h-10 w-10 animate-bounce rounded-full bg-white p-2 lg:hidden"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-4 4m0 0l-4-4m4 4V3" />
-        </svg>
-        <div class="abg-orange-400 mx-auto w-fit overflow-hidden rounded-[6rem] rounded-br-none rounded-tl-none">
-          <img class="h-96" src="https://levinvivant.com/media/uploads/IMG_8115.jpg" />
+
+        <div class="mx-auto w-full sm:w-fit overflow-hidden rounded-[2rem] sm:rounded-[6rem] rounded-br-none rounded-tl-none shadow-lg">
+          <img class="h-60 sm:h-96 w-full object-cover" src="https://levinvivant.com/media/uploads/IMG_8115.jpg" />
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Paginator -->
-
 <!-- Liste des produits -->
-<section *ngIf="!is_loading" class="p-20 flex flex-wrap justify-center space-x-2">
+<section *ngIf="!is_loading" class="p-4 sm:p-10 flex flex-wrap justify-center gap-3">
   <div
     *ngFor="let item of products.slice(first, first + rows)"
     class="p-2"
@@ -80,45 +52,45 @@
     <a
       [routerLink]="'/product-overview/' + item.id"
       [state]="{ data: item }"
-      class="group relative block overflow-hidden w-96 rounded-lg shadow-lg"
+      class="group relative block overflow-hidden w-48 sm:w-60 md:w-72 rounded-lg shadow-lg"
     >
       <img
         [src]="item.get_image"
         alt=""
-        class="w-96 object-cover transition duration-500 group-hover:scale-105 sm:h-96"
+        class="w-full h-48 sm:h-60 md:h-72 object-cover transition duration-500 group-hover:scale-105"
       />
 
-      <div class="relative border border-gray-100 bg-white p-6">
+      <div class="relative border border-gray-100 bg-white p-3 sm:p-4 md:p-5">
         <span
-          class="whitespace-nowrap rounded-lg text-teal-700 font-bold bg-teal-200 px-3 py-1.5 text-xs"
+          class="whitespace-nowrap rounded-lg text-teal-700 font-bold bg-teal-200 px-2 py-1 text-xs"
         >
           {{ item.alcool_degree }} degrés
         </span>
         <span
           *ngIf="item.in_stock"
-          class="ml-3 whitespace-nowrap rounded-lg bg-green-100 font-bold text-green-700 px-3 py-1.5 text-xs"
+          class="ml-2 whitespace-nowrap rounded-lg bg-green-100 font-bold text-green-700 px-2 py-1 text-xs"
         >
           En stock
         </span>
         <span
           *ngIf="!item.in_stock"
-          class="ml-3 whitespace-nowrap rounded-lg bg-red-100 font-bold text-red-700 px-3 py-1.5 text-xs"
+          class="ml-2 whitespace-nowrap rounded-lg bg-red-100 font-bold text-red-700 px-2 py-1 text-xs"
         >
           En rupture
         </span>
 
-        <h3 class="mt-4 text-lg font-medium text-gray-900">
-          {{ item.name.length > 35 ? (item.name | slice: 0: 35) + '...' : item.name }}
+        <h3 class="mt-2 text-xs sm:text-sm md:text-base font-medium text-gray-900">
+          {{ item.name.length > 25 ? (item.name | slice: 0: 25) + '...' : item.name }}
         </h3>
 
-        <p class="mt-1.5 text-sm text-gray-700">{{ item.price }} €</p>
+        <p class="mt-1 text-xs sm:text-sm md:text-base text-gray-700">{{ item.price }} €</p>
 
-        <form class="mt-4">
+        <form class="mt-2">
           <button
             class="
             rounded-full
             block w-full border-4 border-black
-            bg-white text-black font-bold p-4
+            bg-white text-black font-bold p-2 sm:p-2.5 md:p-3
             transition hover:scale-105
             hover:bg-black hover:text-white
             duration-200
@@ -131,6 +103,8 @@
     </a>
   </div>
 </section>
+
+<!-- Pagination -->
 <p-paginator
   class="relative z-10"
   (onPageChange)="onPageChange($event)"

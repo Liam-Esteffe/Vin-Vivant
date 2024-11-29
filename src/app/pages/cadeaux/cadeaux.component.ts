@@ -27,7 +27,7 @@ export class CadeauxComponent {
       id: 9899998,
       in_stock: true,
       price: this.price,
-      region: 0,
+      region: "",
       types: []
     }
     if (parseInt(this.price) > 0) {

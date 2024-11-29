@@ -1,64 +1,58 @@
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-epicerie',
   templateUrl: './epicerie.component.html',
-  styleUrl: './epicerie.component.scss'
+  styleUrls: ['./epicerie.component.scss']
 })
-export class EpicerieComponent {
-  constructor(private http: HttpClient) {
-  }
-  public products: Array<any> = [];
-  public is_loading: boolean = true;
-  apiUrl: string = environment.apiUrl;
+export class EpicerieComponent implements OnInit {
+  public value: string = ""; // Recherche actuelle
+  public first: number = 0; // Index de départ pour la pagination
+  public rows: number = 10; // Nombre de lignes à afficher par page
 
-  EPICERIE_PRODUCTS_API = `${this.apiUrl}products/epicerie/`
-  value: string = "";
-  public filteredProducts: Array<any> = [];
-  first: number = 0;
-  rows: number = 10;
+  public products: Array<any> = []; // Liste des produits affichés (filtrée)
+  private allProducts: Array<any> = []; // Liste complète des produits
+  public is_loading: boolean = true; // Indicateur de chargement
+
+  EPICERIE_PRODUCTS_API = 'https://levinvivant.com/api/v1/products/epicerie/';
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.getLatestProducts()
+    this.getLatestProducts();
   }
 
-  selectProduct(product: any) {
-    this.value = product.name; // Met le nom du produit dans l'input
-    this.filteredProducts = []; // Ferme le dropdown
-    // Optionnel : navigue vers une autre page ou affiche des détails
-    console.log('Produit sélectionné :', product);
+  // Récupération des produits depuis l'API
+  private getLatestProducts() {
+    this.is_loading = true;
+    this.http.get(this.EPICERIE_PRODUCTS_API).subscribe((results: any) => {
+      this.allProducts = results.products; // Stocke la liste complète des produits
+      this.products = [...this.allProducts]; // Initialise la liste affichée
+      this.is_loading = false;
+    });
   }
 
+  // Mise à jour des produits lors d'une recherche
   onSearchChange() {
     if (this.value.trim() === '') {
-      this.filteredProducts = [];
+      this.products = [...this.allProducts]; // Réinitialise la liste si la recherche est vide
       return;
     }
 
-    if (this.value.length > 3) {
-    this.filteredProducts = this.products.filter((product) =>
+    this.products = this.allProducts.filter((product) =>
       product.name.toLowerCase().includes(this.value.toLowerCase())
     );
   }
 
-  }
-
-  private getLatestProducts() {
-    this.http.get(this.EPICERIE_PRODUCTS_API).subscribe((results: any) => {
-      this.products = results.products;
-      this.is_loading = false;
-    })
-  }
-
+  // Gestion de la pagination
   onPageChange(event: PageEvent | any) {
-    this.is_loading = true; // Réactive le loader pour simuler le chargement
-    setTimeout(() => { // Simulation d'un délai pour afficher le loader
+    this.is_loading = true;
+    setTimeout(() => {
       this.first = event.first;
       this.rows = event.rows;
-      this.is_loading = false; // Désactive le loader après mise à jour des indices
-    }, 500); // Ajuste ce délai selon l'effet visuel souhaité
+      this.is_loading = false;
+    }, 500); // Simulation de chargement
   }
 }
 

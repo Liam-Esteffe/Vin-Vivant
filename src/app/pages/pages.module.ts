@@ -23,6 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { CartComponent } from './cart/cart.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -42,6 +43,7 @@ import { CartComponent } from './cart/cart.component';
     CommonModule,
     RouterLink,
     HttpClientModule,
+    BrowserAnimationsModule,
     RouterLinkActive,
     FormsModule,
     ReactiveFormsModule,
