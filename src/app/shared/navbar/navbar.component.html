@@ -1,49 +1,131 @@
-<nav class="border-b-2 border-gray-300 bg-white w-full flex justify-between items-center px-4 md:px-8 h-20 relative">
-  <!-- Left links (desktop only) -->
-  <div class="hidden md:flex space-x-4">
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="home">Accueil</a>
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="vin">Vin</a>
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="beer">Bière</a>
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="spiritueux">Spiritueux</a>
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="epicerie">Épicerie</a>
-    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="cadeaux">Carte Cadeaux</a>
+<!-- Main Navigation -->
+<nav
+  class="sticky top-0 z-50 border-b-2 border-gray-300 bg-white w-full flex justify-between items-center px-4 md:px-8 h-20 shadow-sm"
+>
+  <!-- Left links (desktop) -->
+  <div class="hidden lg:flex space-x-6">
+    <a class="nav-link group" routerLink="/home">
+      <span class="relative">
+        Accueil
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
+    <a class="nav-link group" routerLink="/vin">
+      <span class="relative">
+        Vin
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
+    <a class="nav-link group" routerLink="/beer">
+      <span class="relative">
+        Bière
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
+    <a class="nav-link group" routerLink="/spiritueux">
+      <span class="relative">
+        Spiritueux
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
+    <a class="nav-link group" routerLink="/epicerie">
+      <span class="relative">
+        Épicerie
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
   </div>
 
   <!-- Logo (centered) -->
-  <div class="absolute left-1/2 transform -translate-x-1/2">
-    <a routerLink="home">
-      <img 
-        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.scorpmedia.fr%2Fwp-content%2Fuploads%2F2022%2F04%2FLOGO.jpg&f=1&nofb=1" 
-        class="h-12 md:h-16" alt="Logo">
+  <div
+    class="absolute left-1/2 transform -translate-x-1/2 hover:opacity-90 transition-opacity"
+  >
+    <a routerLink="/home" class="block">
+      <img
+        src="../../../assets/logo.jpeg"
+        class="h-14 md:h-16 object-contain"
+        alt="Logo Cave à Vins"
+      />
     </a>
   </div>
 
   <!-- Right: Cart link -->
-  <div class="hidden md:flex items-center space-x-2">
-    <a class="h-10 inline-flex items-center space-x-1 py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="/cart">
-      <i class="fa-solid fa-basket-shopping"></i>
+  <div class="flex items-center">
+    <a
+      class="flex items-center space-x-2 py-2 px-4 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
+      routerLink="/cart"
+    >
+      <i class="fa-solid fa-basket-shopping text-red-600"></i>
+      <span class="hidden sm:inline font-medium">Panier</span>
     </a>
   </div>
 
   <!-- Hamburger Button for mobile -->
-  <div class="md:hidden flex items-center">
-    <button (click)="toggleMenu()" class="text-gray-700 hover:text-gray-900">
-      <i class="fas fa-bars fa-2x"></i>
+  <div class="lg:hidden flex items-center">
+    <button
+      (click)="toggleMenu()"
+      class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+      aria-label="Menu"
+    >
+      <i class="fas fa-bars text-xl"></i>
     </button>
   </div>
 </nav>
 
 <!-- Mobile Menu (hidden by default) -->
-<div 
-  [ngClass]="{'hidden': !isMenuOpen, 'absolute top-20 left-0 w-full bg-white shadow-lg py-4 z-10': true}" 
-  class="md:hidden"
+<div
+  [ngClass]="{ 'translate-x-0': isMenuOpen, '-translate-x-full': !isMenuOpen }"
+  class="fixed top-0 left-0 h-full w-full bg-white shadow-xl transition-transform duration-300 ease-in-out lg:hidden z-40"
 >
-  <div class="flex flex-col items-center space-y-6 py-4 px-6">
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="home">Accueil</a>
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="vin">Vin</a>
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="beer">Bière</a>
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="spiritueux">Spiritueux</a>
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="epicerie">Épicerie</a>
-    <a class="py-2 px-3 hover:bg-gray-200 rounded-full font-semibold" routerLink="cadeaux">Carte Cadeaux</a>
+  <!-- Close button -->
+  <button
+    (click)="toggleMenu()"
+    class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
+    aria-label="Fermer le menu"
+  >
+    <i class="fas fa-times text-xl"></i>
+  </button>
+
+  <div class="flex flex-col items-center space-y-6 pt-20 px-6">
+    <a
+      class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      routerLink="/home"
+      (click)="toggleMenu()"
+      >Accueil</a
+    >
+    <a
+      class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      routerLink="/vin"
+      (click)="toggleMenu()"
+      >Vin</a
+    >
+    <a
+      class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      routerLink="/beer"
+      (click)="toggleMenu()"
+      >Bière</a
+    >
+    <a
+      class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      routerLink="/spiritueux"
+      (click)="toggleMenu()"
+      >Spiritueux</a
+    >
+    <a
+      class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      routerLink="/epicerie"
+      (click)="toggleMenu()"
+      >Épicerie</a
+    >
   </div>
 </div>

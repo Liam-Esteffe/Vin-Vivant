@@ -1,96 +1,190 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Vin } from '../../interfaces/vin.interface';
 import { environment } from '../../../../environments/environments';
+import { Subject, takeUntil } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { PaginatorState } from 'primeng/paginator';
+
+interface Region {
+  id: number;
+  name: string;
+}
+
+interface WineType {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-vin',
   templateUrl: './vin.component.html',
-  styleUrl: './vin.component.scss'
+  styleUrl: './vin.component.scss',
 })
-export class VinComponent implements OnInit {
-  public value: string = "";
-  first: number = 0;
-  rows: number = 10;
-
-  constructor(private http: HttpClient) { }
-
-  public products: Array<Vin> = []; // Liste des produits affichés (filtrée)
-  private allProducts: Array<Vin> = []; // Liste complète des produits (non filtrée)
-  public is_loading: boolean = true;
-  public uniqueRegions: Array<any> = []; // Stocke les régions uniques
-  public selectedRegion: string = "";
-  apiUrl: string = environment.apiUrl;
-  VIN_PRODUCTS_API = `${this.apiUrl}products/vins/`;
-  VINS_REGION_API = `${this.apiUrl}regions/`;
-
-  ngOnInit() {
-    this.getLatestProducts();
-  }
-
-  // Récupération des produits
-  private getLatestProducts() {
-    this.http.get(this.VIN_PRODUCTS_API).subscribe((results: any) => {
-      this.allProducts = results.products; // Stocke la liste complète des produits
-      this.products = [...this.allProducts]; // Initialise la liste filtrée
-      this.is_loading = false;
-      this.extractUniqueRegions();
-    });
-  }
-
-  // Récupération des régions uniques
-  private extractUniqueRegions() {
-    this.http.get(this.VINS_REGION_API).subscribe((result: any) => {
-      this.uniqueRegions = result;
-    });
-  }
-
-  // Mise à jour des produits lors d'une recherche
-  onSearchChange() {
-    this.applyFilters(); // Applique les filtres sur la liste complète
-  }
-
-  // Mise à jour des produits lors d'un changement de région
-  onRegionChange(event: any) {
-    this.selectedRegion = event.target.value; // Récupère la région sélectionnée
-    this.applyFilters(); // Applique les filtres sur la liste complète
-  }
-
-  // Méthode centrale pour appliquer les filtres
-  private applyFilters() {
-    let filtered = [...this.allProducts]; // Copie de la liste complète
-
-    // Filtre par recherche (si le champ n'est pas vide)
-    if (this.value.trim() !== '') {
-      filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(this.value.toLowerCase())
-      );
-    }
-
-    // Filtre par région (si une région est sélectionnée)
-    if (this.selectedRegion && this.selectedRegion !== "all") {
-      filtered = filtered.filter(
-        (product) => parseInt(product.region) === parseInt(this.selectedRegion)
-      );
-    }
-
-    this.products = filtered; // Met à jour la liste affichée
-  }
-
+export class VinComponent implements OnInit, OnDestroy {
   // Pagination
-  onPageChange(event: PageEvent | any) {
-    this.is_loading = true; // Active le loader pour simuler le chargement
-    setTimeout(() => {
-      this.first = event.first;
-      this.rows = event.rows;
-      this.is_loading = false; // Désactive le loader après mise à jour des indices
-    }, 500);
-  }
-}
+  public first: number = 0;
+  public rows: number = 12; // Changé à 12 pour un meilleur affichage en grille
 
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
+  // Filtres
+  public searchValue: string = '';
+  public selectedRegion: string = '';
+  public selectedType: string = '';
+
+  // Données
+  public products: Array<Vin> = [];
+  private allProducts: Array<Vin> = [];
+  public uniqueRegions: Array<Region> = [];
+  public uniqueTypes: Array<WineType> = [];
+
+  // États
+  public isLoading: boolean = true;
+  private destroy$ = new Subject<void>();
+
+  // URLs API
+  private readonly apiUrl: string = environment.apiUrl;
+  private readonly VIN_PRODUCTS_API = `${this.apiUrl}products/vins/`;
+  private readonly VINS_REGION_API = `${this.apiUrl}regions/`;
+  private readonly VINS_TYPE_API = `${this.apiUrl}types/`;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.initializeData();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private initializeData(): void {
+    this.isLoading = true;
+    Promise.all([
+      this.fetchProducts(),
+      this.fetchRegions(),
+      this.fetchTypes(),
+    ]).finally(() => {
+      this.isLoading = false;
+    });
+  }
+
+  private fetchProducts(): Promise<void> {
+    return new Promise((resolve) => {
+      this.http
+        .get<{ products: Vin[] }>(this.VIN_PRODUCTS_API)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => resolve()),
+        )
+        .subscribe({
+          next: (response) => {
+            this.allProducts = response.products;
+            this.products = [...this.allProducts];
+          },
+          error: (error) => {
+            console.error('Erreur lors du chargement des produits:', error);
+            this.products = [];
+            this.allProducts = [];
+          },
+        });
+    });
+  }
+
+  private fetchRegions(): Promise<void> {
+    return new Promise((resolve) => {
+      this.http
+        .get<Region[]>(this.VINS_REGION_API)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => resolve()),
+        )
+        .subscribe({
+          next: (regions) => (this.uniqueRegions = regions),
+          error: (error) => {
+            console.error('Erreur lors du chargement des régions:', error);
+            this.uniqueRegions = [];
+          },
+        });
+    });
+  }
+
+  private fetchTypes(): Promise<void> {
+    return new Promise((resolve) => {
+      this.http
+        .get<WineType[]>(this.VINS_TYPE_API)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => resolve()),
+        )
+        .subscribe({
+          next: (types) => (this.uniqueTypes = types),
+          error: (error) => {
+            console.error('Erreur lors du chargement des types:', error);
+            this.uniqueTypes = [];
+          },
+        });
+    });
+  }
+
+  // Gestionnaires d'événements
+  public onSearchChange(): void {
+    this.applyFilters();
+  }
+
+  public onRegionChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedRegion = select.value;
+    this.applyFilters();
+  }
+
+  public onTypeChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedType = select.value;
+    this.applyFilters();
+  }
+
+  public onPageChange(event: PaginatorState): void {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.first = event.first ?? 0;
+      this.rows = event.rows ?? 12;
+      this.isLoading = false;
+    }, 300);
+  }
+
+  // Logique de filtrage
+  private applyFilters(): void {
+    let filtered = [...this.allProducts];
+
+    // Filtre par recherche
+    if (this.searchValue.trim()) {
+      const searchTerm = this.searchValue.toLowerCase().trim();
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Filtre par région
+    if (this.selectedRegion) {
+      filtered = filtered.filter(
+        (product) => product.region.toString() === this.selectedRegion,
+      );
+    }
+
+    // Filtre par type
+    if (this.selectedType) {
+      filtered = filtered.filter(
+        (product) => product.types.toString() === this.selectedType,
+      );
+    }
+
+    this.products = filtered;
+    this.first = 0; // Reset pagination when filtering
+  }
+
+  // Méthodes utilitaires
+  public trackByProductId(index: number, product: Vin): number {
+    return product.id;
+  }
 }

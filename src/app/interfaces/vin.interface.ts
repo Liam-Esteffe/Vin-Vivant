@@ -1,4 +1,5 @@
 export interface Vin {
+    type: any;
     alcool_degree: number,
     capacity: number,
     description: string,

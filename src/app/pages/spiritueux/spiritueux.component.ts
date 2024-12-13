@@ -1,95 +1,155 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { PaginatorState } from 'primeng/paginator';
+import { environment } from '../../../../environments/environments';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  region: number;
+  alcool_degree: number;
+  in_stock: boolean;
+  get_image: string;
+}
+
+interface Region {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-spiritueux',
   templateUrl: './spiritueux.component.html',
   styleUrls: ['./spiritueux.component.scss']
 })
-export class SpiritueuxComponent implements OnInit {
-  public value: string = ""; // Recherche actuelle
-  public first: number = 0; // Index de départ pour la pagination
-  public rows: number = 10; // Nombre de lignes à afficher par page
+export class SpiritueuxComponent implements OnInit, OnDestroy {
+  // Pagination
+  public first: number = 0;
+  public rows: number = 12;
 
-  public products: Array<any> = []; // Liste des produits affichés (filtrée)
-  private allProducts: Array<any> = []; // Liste complète des produits
-  public uniqueRegions: Array<any> = []; // Liste des régions uniques
-  public selectedRegion: string = ""; // Région actuellement sélectionnée
-  public is_loading: boolean = true; // Indicateur de chargement
+  // Filtres
+  public searchValue: string = '';
+  public selectedRegion: string = '';
 
-  SPIRITUEUX_PRODUCTS_API = 'https://levinvivant.com/api/v1/products/spiritueux/';
-  SPIRITUEUX_REGIONS_API = 'https://levinvivant.com/api/v1/regions/';
+  // Données
+  public products: Array<Product> = [];
+  private allProducts: Array<Product> = [];
+  public uniqueRegions: Array<Region> = [];
 
-  constructor(private http: HttpClient) { }
+  // États
+  public isLoading: boolean = true;
+  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
-    this.getLatestProducts();
-    this.extractUniqueRegions();
+  // URLs API
+  private readonly apiUrl: string = environment.apiUrl;
+  private readonly SPIRITUEUX_PRODUCTS_API = `${this.apiUrl}products/spiritueux/`;
+  private readonly SPIRITUEUX_REGIONS_API = `${this.apiUrl}regions/`;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.initializeData();
   }
 
-  // Récupération des produits depuis l'API
-  private getLatestProducts() {
-    this.is_loading = true;
-    this.http.get(this.SPIRITUEUX_PRODUCTS_API).subscribe((results: any) => {
-      this.allProducts = results.products; // Stocke la liste complète des produits
-      this.products = [...this.allProducts]; // Initialise la liste affichée
-      this.is_loading = false;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private initializeData(): void {
+    this.isLoading = true;
+    Promise.all([
+      this.fetchProducts(),
+      this.fetchRegions()
+    ]).finally(() => {
+      this.isLoading = false;
     });
   }
 
-  // Récupération des régions uniques depuis l'API
-  private extractUniqueRegions() {
-    this.http.get(this.SPIRITUEUX_REGIONS_API).subscribe((result: any) => {
-      this.uniqueRegions = result; // Stocke les régions uniques
+  private fetchProducts(): Promise<void> {
+    return new Promise((resolve) => {
+      this.http.get<{products: Product[]}>(this.SPIRITUEUX_PRODUCTS_API)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => resolve())
+        )
+        .subscribe({
+          next: (response) => {
+            this.allProducts = response.products;
+            this.products = [...this.allProducts];
+          },
+          error: (error) => {
+            console.error('Erreur lors du chargement des produits:', error);
+            this.products = [];
+            this.allProducts = [];
+          }
+        });
     });
   }
 
-  // Mise à jour des produits lors d'une recherche
-  onSearchChange() {
+  private fetchRegions(): Promise<void> {
+    return new Promise((resolve) => {
+      this.http.get<Region[]>(this.SPIRITUEUX_REGIONS_API)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => resolve())
+        )
+        .subscribe({
+          next: (regions) => this.uniqueRegions = regions,
+          error: (error) => {
+            console.error('Erreur lors du chargement des régions:', error);
+            this.uniqueRegions = [];
+          }
+        });
+    });
+  }
+
+  // Gestionnaires d'événements
+  public onSearchChange(): void {
     this.applyFilters();
   }
 
-  // Mise à jour des produits lors d'un changement de région
-  onRegionChange(event: any) {
-    this.selectedRegion = event.target.value; // Met à jour la région sélectionnée
+  public onRegionChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedRegion = select.value;
     this.applyFilters();
   }
 
-  // Méthode centrale pour appliquer les filtres
-  private applyFilters() {
-    let filtered = [...this.allProducts]; // Copie de la liste complète
-
-    // Filtre par recherche
-    if (this.value.trim() !== '') {
-      filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(this.value.toLowerCase())
-      );
-    }
-
-    // Filtre par région
-    if (this.selectedRegion && this.selectedRegion !== "all") {
-      filtered = filtered.filter(
-        (product) => parseInt(product.region) === parseInt(this.selectedRegion)
-      );
-    }
-
-    this.products = filtered; // Met à jour la liste affichée
-  }
-
-  // Gestion de la pagination
-  onPageChange(event: PageEvent | any) {
-    this.is_loading = true;
+  public onPageChange(event: PaginatorState): void {
+    this.isLoading = true;
     setTimeout(() => {
-      this.first = event.first;
-      this.rows = event.rows;
-      this.is_loading = false;
-    }, 500); // Simulation de chargement
+      this.first = event.first ?? 0;
+      this.rows = event.rows ?? 12;
+      this.isLoading = false;
+    }, 300);
   }
-}
 
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
+  // Logique de filtrage
+  private applyFilters(): void {
+    let filtered = [...this.allProducts];
+
+    if (this.searchValue.trim()) {
+      const searchTerm = this.searchValue.toLowerCase().trim();
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (this.selectedRegion) {
+      filtered = filtered.filter(product =>
+        product.region.toString() === this.selectedRegion
+      );
+    }
+
+    this.products = filtered;
+    this.first = 0;
+  }
+
+  // Méthodes utilitaires
+  public trackByProductId(index: number, product: Product): number {
+    return product.id;
+  }
 }

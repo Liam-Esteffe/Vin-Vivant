@@ -1,64 +1,100 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { PaginatorState } from 'primeng/paginator';
+import { environment } from '../../../../environments/environments';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  alcool_degree: number;
+  in_stock: boolean;
+  get_image: string;
+}
 
 @Component({
   selector: 'app-epicerie',
   templateUrl: './epicerie.component.html',
   styleUrls: ['./epicerie.component.scss']
 })
-export class EpicerieComponent implements OnInit {
-  public value: string = ""; // Recherche actuelle
-  public first: number = 0; // Index de départ pour la pagination
-  public rows: number = 10; // Nombre de lignes à afficher par page
+export class EpicerieComponent implements OnInit, OnDestroy {
+  // Pagination
+  public first: number = 0;
+  public rows: number = 12;
 
-  public products: Array<any> = []; // Liste des produits affichés (filtrée)
-  private allProducts: Array<any> = []; // Liste complète des produits
-  public is_loading: boolean = true; // Indicateur de chargement
+  // Filtres
+  public searchValue: string = '';
 
-  EPICERIE_PRODUCTS_API = 'https://levinvivant.com/api/v1/products/epicerie/';
+  // Données
+  public products: Array<Product> = [];
+  private allProducts: Array<Product> = [];
+
+  // États
+  public isLoading: boolean = true;
+  private destroy$ = new Subject<void>();
+
+  // URLs API
+  private readonly apiUrl: string = environment.apiUrl;
+  private readonly EPICERIE_PRODUCTS_API = `${this.apiUrl}products/epicerie/`;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-    this.getLatestProducts();
+  ngOnInit(): void {
+    this.fetchProducts();
   }
 
-  // Récupération des produits depuis l'API
-  private getLatestProducts() {
-    this.is_loading = true;
-    this.http.get(this.EPICERIE_PRODUCTS_API).subscribe((results: any) => {
-      this.allProducts = results.products; // Stocke la liste complète des produits
-      this.products = [...this.allProducts]; // Initialise la liste affichée
-      this.is_loading = false;
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  // Mise à jour des produits lors d'une recherche
-  onSearchChange() {
-    if (this.value.trim() === '') {
-      this.products = [...this.allProducts]; // Réinitialise la liste si la recherche est vide
+  private fetchProducts(): void {
+    this.isLoading = true;
+    this.http.get<{products: Product[]}>(this.EPICERIE_PRODUCTS_API)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false)
+      )
+      .subscribe({
+        next: (response) => {
+          this.allProducts = response.products;
+          this.products = [...this.allProducts];
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des produits:', error);
+          this.products = [];
+          this.allProducts = [];
+        }
+      });
+  }
+
+  // Gestionnaires d'événements
+  public onSearchChange(): void {
+    if (this.searchValue.trim() === '') {
+      this.products = [...this.allProducts];
       return;
     }
 
-    this.products = this.allProducts.filter((product) =>
-      product.name.toLowerCase().includes(this.value.toLowerCase())
+    const searchTerm = this.searchValue.toLowerCase().trim();
+    this.products = this.allProducts.filter(product =>
+      product.name.toLowerCase().includes(searchTerm)
     );
+    this.first = 0;
   }
 
-  // Gestion de la pagination
-  onPageChange(event: PageEvent | any) {
-    this.is_loading = true;
+  public onPageChange(event: PaginatorState): void {
+    this.isLoading = true;
     setTimeout(() => {
-      this.first = event.first;
-      this.rows = event.rows;
-      this.is_loading = false;
-    }, 500); // Simulation de chargement
+      this.first = event.first ?? 0;
+      this.rows = event.rows ?? 12;
+      this.isLoading = false;
+    }, 300);
   }
-}
 
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
+  // Méthodes utilitaires
+  public trackByProductId(index: number, product: Product): number {
+    return product.id;
+  }
 }
