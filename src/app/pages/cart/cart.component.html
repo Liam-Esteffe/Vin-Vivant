@@ -1,8 +1,8 @@
-<div class="bg-white">
+<div class="bg-white min-h-screen">
 
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-2 sm:p-4">
     <p-toast position="top-right"></p-toast>
-    <h2 class="text-2xl font-bold mb-4">Panier</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-4">Panier</h2>
 
     <!-- Vérification si le panier est vide -->
     <div *ngIf="cartItems.length === 0" class="text-center text-gray-500">
@@ -10,22 +10,22 @@
     </div>
 
     <!-- Liste des articles -->
-    <div *ngIf="cartItems.length > 0" class="grid gap-4">
-        <div class="flex items-center bg-white shadow-md rounded-lg p-4 border">
+    <div *ngIf="cartItems.length > 0" class="grid gap-2 sm:gap-4">
+        <div class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
             <!-- Image du produit -->
-            <div class="w-24 h-24 flex-shrink-0">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
                 <img src="https://media.istockphoto.com/id/912149768/fr/vectoriel/ic%C3%B4ne-de-bo%C3%AEte-de-cadeau-simple-%C3%A9l%C3%A9ment-de-design-de-couleur-unique-isol%C3%A9-sur-blanc-cadeau.jpg?s=612x612&w=0&k=20&c=UCwAAB30M4KH-XJGv97DfK4SUBQB-YofyOWBWwL63ao=" alt="gift" class="w-full h-full object-cover rounded-lg" />
             </div>
 
             <!-- Détails du produit -->
-            <div class="flex-1 ml-4">
-                <h3 class="text-lg font-semibold">Option : Emballage Cadeaux</h3>
-                <p class="text-sm text-gray-500">Prix : {{ 3 | currency:'EUR':true }}</p>
+            <div class="flex-1 text-center md:text-left">
+                <h3 class="text-base sm:text-lg font-semibold">Option : Emballage Cadeaux</h3>
+                <p class="text-xs sm:text-sm text-gray-500">Prix : {{ 3 | currency:'EUR':true }}</p>
             </div>
 
             <!-- Quantité -->
-            <div class="flex items-center gap-4">
-                <input type="number" class="w-16 p-1 border rounded-lg text-center" [value]="0"
+            <div class="flex items-center gap-2 sm:gap-4">
+                <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="0"
                     (change)="updateGift()" min="0" max="1" />
             </div>
 
@@ -33,32 +33,32 @@
             <div class="ml-4">
             </div>
         </div>
-        <div *ngFor="let item of cartItems" class="flex items-center bg-white shadow-md rounded-lg p-4 border">
+        <div *ngFor="let item of cartItems" class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
             <!-- Image du produit -->
-            <div class="w-24 h-24 flex-shrink-0">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
                 <img [src]="item.get_image" alt="{{ item.name }}" class="w-full h-full object-cover rounded-lg" />
             </div>
 
             <!-- Détails du produit -->
-            <div class="flex-1 ml-4">
-                <h3 class="text-lg font-semibold">{{ item.name }}</h3>
-                <p class="text-sm text-gray-500">Prix : {{ item.price | currency:'EUR':true }}</p>
-                <p class="text-sm text-gray-500" *ngIf="item.stock">En stock</p>
-                <p class="text-sm text-red-500 font-semibold" *ngIf="!item.stock">
+            <div class="flex-1 text-center md:text-left">
+                <h3 class="text-base sm:text-lg font-semibold break-words">{{ item.name }}</h3>
+                <p class="text-xs sm:text-sm text-gray-500">Prix : {{ item.price | currency:'EUR':true }}</p>
+                <p class="text-xs sm:text-sm text-gray-500" *ngIf="item.stock">En stock</p>
+                <p class="text-xs sm:text-sm text-red-500 font-semibold" *ngIf="!item.stock">
                     Rupture de stock
                 </p>
             </div>
 
             <!-- Quantité -->
-            <div class="flex items-center gap-4">
-                <input type="number" class="w-16 p-1 border rounded-lg text-center" [value]="item.quantity"
+            <div class="flex items-center gap-2 sm:gap-4">
+                <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="item.quantity"
                     (change)="updateQuantity(item.id, $event)" min="1" [disabled]="!item.stock" />
             </div>
 
             <!-- Bouton supprimer -->
             <div class="ml-4">
                 <button
-                    class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:bg-gray-300"
+                    class="px-2 sm:px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:bg-gray-300 text-sm"
                     (click)="removeItem(item.id)" [disabled]="!item.stock">
                     Supprimer
                 </button>
@@ -67,14 +67,14 @@
     </div>
 
     <!-- Total et actions -->
-    <div *ngIf="cartItems.length > 0" class="mt-6 bg-gray-100 rounded-lg p-4 shadow-sm">
-        <h3 class="text-xl font-semibold">Total : {{ total | currency:'EUR':true }}</h3>
-        <div class="mt-4 flex justify-between">
-            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+    <div *ngIf="cartItems.length > 0" class="mt-4 sm:mt-6 bg-gray-100 rounded-lg p-2 sm:p-4 shadow-sm">
+        <h3 class="text-lg sm:text-xl font-semibold">Total : {{ total | currency:'EUR':true }}</h3>
+        <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row justify-between gap-2 sm:gap-4">
+            <button class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
                 Vider le panier
             </button>
             <button (click)="checkoutStatus = true"
-                class="px-4 py-2 bg-black text-white rounded-lg hover:bg-green-600 transition"
+                class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-green-600 transition text-sm"
                 [disabled]="cartItems.length === 0">
                 Passer à la caisse
             </button>
@@ -87,12 +87,16 @@
     <h2 class="text-2xl font-bold mb-4">Passage à la caisse</h2>
 
     <!-- Tabs Navigation -->
-    <div class="flex space-x-4 border-b-2">
-        <button *ngFor="let tab of tabs; let i = index" class="px-4 py-2 transition" [ngClass]="{
-          'text-gray-500': !tab.active,
-          'text-blue-500 border-b-2 border-blue-500': tab.active,
-          'cursor-not-allowed': !tab.unlocked
-        }" [disabled]="!tab.unlocked" (click)="activateTab(i)">
+    <div class="flex flex-wrap gap-2 border-b-2">
+        <button *ngFor="let tab of tabs; let i = index" 
+            class="px-4 py-2 transition text-sm md:text-base" 
+            [ngClass]="{
+              'text-gray-500': !tab.active,
+              'text-blue-500 border-b-2 border-blue-500': tab.active,
+              'cursor-not-allowed': !tab.unlocked
+            }" 
+            [disabled]="!tab.unlocked" 
+            (click)="activateTab(i)">
             {{ tab.label }}
         </button>
     </div>
@@ -100,9 +104,9 @@
     <!-- Tabs Content -->
     <div class="mt-4">
         <!-- Coordonnées -->
-        <div *ngIf="activeTab === 0">
-            <h3 class="text-lg font-semibold">Coordonnées</h3>
-            <form (ngSubmit)="validateTab(0)" #coordForm="ngForm">
+        <div *ngIf="activeTab === 0" class="max-w-lg mx-auto">
+            <h3 class="text-lg font-semibold mb-4">Coordonnées</h3>
+            <form (ngSubmit)="validateTab(0)" #coordForm="ngForm" class="space-y-4">
                 <div class="mb-4">
                     <label class="block text-sm font-medium">Nom</label>
                     <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.name" name="name"
@@ -132,7 +136,7 @@
         </div>
 
         <!-- Méthode de récupération -->
-        <div *ngIf="activeTab === 1">
+        <div *ngIf="activeTab === 1" class="max-w-lg mx-auto">
             <h3 class="text-lg font-semibold">Méthode de récupération</h3>
             <form (ngSubmit)="validateTab(1)" #pickupForm="ngForm">
                 <div class="mb-4">
@@ -151,7 +155,7 @@
         </div>
 
         <!-- Validation -->
-        <div *ngIf="activeTab === 2" class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto space-y-4">
+        <div *ngIf="activeTab === 2" class="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-md mx-auto space-y-4">
             <!-- Titre de la section -->
             <h3 class="text-2xl font-semibold text-gray-800">Validation</h3>
         
