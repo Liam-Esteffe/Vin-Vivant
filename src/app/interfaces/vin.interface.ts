@@ -10,6 +10,6 @@ export interface Vin {
     in_stock: boolean,
     name: string,
     price: string,
-    region: string,
+    region: number,
     types: Array<number>
 }

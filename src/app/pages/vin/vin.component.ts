@@ -161,7 +161,7 @@ export class VinComponent implements OnInit, OnDestroy {
     if (this.searchValue.trim()) {
       const searchTerm = this.searchValue.toLowerCase().trim();
       filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm)
+        product.name.toLowerCase().includes(searchTerm),
       );
     }
 
@@ -174,13 +174,13 @@ export class VinComponent implements OnInit, OnDestroy {
 
     // Filtre par type
     if (this.selectedType) {
-      filtered = filtered.filter(
-        (product) => product.types.toString() === this.selectedType,
+      filtered = filtered.filter((product) =>
+        product.types.includes(parseInt(this.selectedType)),
       );
     }
 
     this.products = filtered;
-    this.first = 0; // Reset pagination when filtering
+    this.first = 0;
   }
 
   // Méthodes utilitaires
