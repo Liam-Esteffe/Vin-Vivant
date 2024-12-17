@@ -82,6 +82,7 @@ export class CartComponent {
         name: this.userData.name,
         email: this.userData.email,
         phone: this.userData.phone,
+        livraison: this.pickupMethod == "clickAndCollect" ? "Click & Collect" : "Livraison"
       },
       products: this.cartItems.map(item => ({
         image: item.get_image,
