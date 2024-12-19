@@ -44,6 +44,14 @@
         ></span>
       </span>
     </a>
+    <a class="nav-link group" routerLink="/cadeaux">
+      <span class="relative">
+        Carte Cadeaux
+        <span
+          class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full"
+        ></span>
+      </span>
+    </a>
   </div>
 
   <!-- Logo (centered) -->
@@ -127,5 +135,11 @@
       (click)="toggleMenu()"
       >Épicerie</a
     >
+    <a
+    class="w-full text-center py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+    routerLink="/cadeaux"
+    (click)="toggleMenu()"
+    >Carte Cadeaux</a
+  >
   </div>
 </div>
