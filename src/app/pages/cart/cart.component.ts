@@ -22,7 +22,7 @@ export class CartComponent {
   ];
 
   activeTab = 0;
-  userData = { name: '', email: '', phone: '' };
+  userData = { name: '', email: '', phone: '', address: "", postalCode: "" };
   pickupMethod = '';
 
   constructor(private cartService: CartService, private messageService: MessageService,) {
@@ -82,6 +82,8 @@ export class CartComponent {
         name: this.userData.name,
         email: this.userData.email,
         phone: this.userData.phone,
+        address: this.userData.address == "" ? "Non renseigné" : this.userData.address,
+        postalCode: this.userData.address == "" ? "Non renseigné" : this.userData.postalCode,
         livraison: this.pickupMethod == "clickAndCollect" ? "Click & Collect" : "Livraison"
       },
       products: this.cartItems.map(item => ({

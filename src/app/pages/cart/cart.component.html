@@ -1,193 +1,225 @@
 <div class="bg-white min-h-screen">
-
-<div class="container mx-auto p-2 sm:p-4">
+  <div class="container mx-auto p-2 sm:p-4">
     <p-toast position="top-right"></p-toast>
     <h2 class="text-xl sm:text-2xl font-bold mb-4">Panier</h2>
 
     <!-- Vérification si le panier est vide -->
     <div *ngIf="cartItems.length === 0" class="text-center text-gray-500">
-        <p>Votre panier est vide.</p>
+      <p>Votre panier est vide.</p>
     </div>
 
     <!-- Liste des articles -->
     <div *ngIf="cartItems.length > 0" class="grid gap-2 sm:gap-4">
-        <div class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
-            <!-- Image du produit -->
-            <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
-                <img src="https://media.istockphoto.com/id/912149768/fr/vectoriel/ic%C3%B4ne-de-bo%C3%AEte-de-cadeau-simple-%C3%A9l%C3%A9ment-de-design-de-couleur-unique-isol%C3%A9-sur-blanc-cadeau.jpg?s=612x612&w=0&k=20&c=UCwAAB30M4KH-XJGv97DfK4SUBQB-YofyOWBWwL63ao=" alt="gift" class="w-full h-full object-cover rounded-lg" />
-            </div>
-
-            <!-- Détails du produit -->
-            <div class="flex-1 text-center md:text-left">
-                <h3 class="text-base sm:text-lg font-semibold">Option : Emballage Cadeaux</h3>
-                <p class="text-xs sm:text-sm text-gray-500">Prix : {{ 3 | currency:'EUR':true }}</p>
-            </div>
-
-            <!-- Quantité -->
-            <div class="flex items-center gap-2 sm:gap-4">
-                <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="0"
-                    (change)="updateGift()" min="0" max="1" />
-            </div>
-
-            <!-- Bouton supprimer -->
-            <div class="ml-4">
-            </div>
+      <div
+        class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
+        <!-- Image du produit -->
+        <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+          <img
+            src="https://media.istockphoto.com/id/912149768/fr/vectoriel/ic%C3%B4ne-de-bo%C3%AEte-de-cadeau-simple-%C3%A9l%C3%A9ment-de-design-de-couleur-unique-isol%C3%A9-sur-blanc-cadeau.jpg?s=612x612&w=0&k=20&c=UCwAAB30M4KH-XJGv97DfK4SUBQB-YofyOWBWwL63ao="
+            alt="gift" class="w-full h-full object-cover rounded-lg" />
         </div>
-        <div *ngFor="let item of cartItems" class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
-            <!-- Image du produit -->
-            <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
-                <img [src]="item.get_image" alt="{{ item.name }}" class="w-full h-full object-cover rounded-lg" />
-            </div>
 
-            <!-- Détails du produit -->
-            <div class="flex-1 text-center md:text-left">
-                <h3 class="text-base sm:text-lg font-semibold break-words">{{ item.name }}</h3>
-                <p class="text-xs sm:text-sm text-gray-500">Prix : {{ item.price | currency:'EUR':true }}</p>
-                <p class="text-xs sm:text-sm text-gray-500" *ngIf="item.stock">En stock</p>
-                <p class="text-xs sm:text-sm text-red-500 font-semibold" *ngIf="!item.stock">
-                    Rupture de stock
-                </p>
-            </div>
-
-            <!-- Quantité -->
-            <div class="flex items-center gap-2 sm:gap-4">
-                <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="item.quantity"
-                    (change)="updateQuantity(item.id, $event)" min="1" [disabled]="!item.stock" />
-            </div>
-
-            <!-- Bouton supprimer -->
-            <div class="ml-4">
-                <button
-                    class="px-2 sm:px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:bg-gray-300 text-sm"
-                    (click)="removeItem(item.id)" [disabled]="!item.stock">
-                    Supprimer
-                </button>
-            </div>
+        <!-- Détails du produit -->
+        <div class="flex-1 text-center md:text-left">
+          <h3 class="text-base sm:text-lg font-semibold">
+            Option : Emballage Cadeaux
+          </h3>
+          <p class="text-xs sm:text-sm text-gray-500">
+            Prix : {{ 3 | currency: "EUR" : true }}
+          </p>
         </div>
+
+        <!-- Quantité -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="0"
+            (change)="updateGift()" min="0" max="1" />
+        </div>
+
+        <!-- Bouton supprimer -->
+        <div class="ml-4"></div>
+      </div>
+      <div *ngFor="let item of cartItems"
+        class="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-2 sm:p-4 border gap-2 sm:gap-4">
+        <!-- Image du produit -->
+        <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+          <img [src]="item.get_image" alt="{{ item.name }}" class="w-full h-full object-cover rounded-lg" />
+        </div>
+
+        <!-- Détails du produit -->
+        <div class="flex-1 text-center md:text-left">
+          <h3 class="text-base sm:text-lg font-semibold break-words">
+            {{ item.name }}
+          </h3>
+          <p class="text-xs sm:text-sm text-gray-500">
+            Prix : {{ item.price | currency: "EUR" : true }}
+          </p>
+          <p class="text-xs sm:text-sm text-gray-500" *ngIf="item.stock">
+            En stock
+          </p>
+          <p class="text-xs sm:text-sm text-red-500 font-semibold" *ngIf="!item.stock">
+            Rupture de stock
+          </p>
+        </div>
+
+        <!-- Quantité -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <input type="number" class="w-12 sm:w-16 p-1 border rounded-lg text-center text-sm" [value]="item.quantity"
+            (change)="updateQuantity(item.id, $event)" min="1" [disabled]="!item.stock" />
+        </div>
+
+        <!-- Bouton supprimer -->
+        <div class="ml-4">
+          <button
+            class="px-2 sm:px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:bg-gray-300 text-sm"
+            (click)="removeItem(item.id)" [disabled]="!item.stock">
+            Supprimer
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Total et actions -->
     <div *ngIf="cartItems.length > 0" class="mt-4 sm:mt-6 bg-gray-100 rounded-lg p-2 sm:p-4 shadow-sm">
-        <h3 class="text-lg sm:text-xl font-semibold">Total : {{ total | currency:'EUR':true }}</h3>
-        <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row justify-between gap-2 sm:gap-4">
-            <button class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
-                Vider le panier
-            </button>
-            <button (click)="checkoutStatus = true"
-                class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-green-600 transition text-sm"
-                [disabled]="cartItems.length === 0">
-                Passer à la caisse
-            </button>
-        </div>
+      <h3 class="text-lg sm:text-xl font-semibold">
+        Total : {{ total | currency: "EUR" : true }}
+      </h3>
+      <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row justify-between gap-2 sm:gap-4">
+        <button
+          class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+          Vider le panier
+        </button>
+        <button (click)="checkoutStatus = true"
+          class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-green-600 transition text-sm"
+          [disabled]="cartItems.length === 0">
+          Passer à la caisse
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-
-<div *ngIf="checkoutStatus" class="container mx-auto p-4">
+  <div *ngIf="checkoutStatus" class="container mx-auto p-4">
     <h2 class="text-2xl font-bold mb-4">Passage à la caisse</h2>
 
     <!-- Tabs Navigation -->
     <div class="flex flex-wrap gap-2 border-b-2">
-        <button *ngFor="let tab of tabs; let i = index" 
-            class="px-4 py-2 transition text-sm md:text-base" 
-            [ngClass]="{
-              'text-gray-500': !tab.active,
-              'text-blue-500 border-b-2 border-blue-500': tab.active,
-              'cursor-not-allowed': !tab.unlocked
-            }" 
-            [disabled]="!tab.unlocked" 
-            (click)="activateTab(i)">
-            {{ tab.label }}
-        </button>
+      <button *ngFor="let tab of tabs; let i = index" class="px-4 py-2 transition text-sm md:text-base" [ngClass]="{
+          'text-gray-500': !tab.active,
+          'text-blue-500 border-b-2 border-blue-500': tab.active,
+          'cursor-not-allowed': !tab.unlocked,
+        }" [disabled]="!tab.unlocked" (click)="activateTab(i)">
+        {{ tab.label }}
+      </button>
     </div>
 
     <!-- Tabs Content -->
     <div class="mt-4">
-        <!-- Coordonnées -->
-        <div *ngIf="activeTab === 0" class="max-w-lg mx-auto">
-            <h3 class="text-lg font-semibold mb-4">Coordonnées</h3>
-            <form (ngSubmit)="validateTab(0)" #coordForm="ngForm" class="space-y-4">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium">Nom</label>
-                    <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.name" name="name"
-                        required />
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium">Numéro de téléphone</label>
-                    <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.phone" name="phone"
-                        required />
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium">Email</label>
-                    <input type="email" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.email" name="email"
-                        required />
-                </div>
-                <button
-                type="submit"
-                class="px-4 py-2 rounded-lg transition"
-                [ngClass]="{
-                  'bg-green-500 text-white hover:bg-green-600': coordForm.form.valid,
-                  'bg-gray-400 text-gray-700 cursor-not-allowed': !coordForm.form.valid
-                }"
-                [disabled]="!coordForm.form.valid">
-                Valider Coordonnées
-              </button>
-            </form>
+      <!-- Coordonnées -->
+      <div *ngIf="activeTab === 0" class="max-w-lg mx-auto">
+        <h3 class="text-lg font-semibold mb-4">Coordonnées</h3>
+        <form (ngSubmit)="validateTab(0)" #coordForm="ngForm" class="space-y-4">
+          <div class="mb-4">
+            <label class="block text-sm font-medium">Nom</label>
+            <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.name" name="name" required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium">Numéro de téléphone</label>
+            <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.phone" name="phone"
+              required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium">Email</label>
+            <input type="email" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.email" name="email"
+              required />
+          </div>
+          <button type="submit" class="px-4 py-2 rounded-lg transition" [ngClass]="{
+              'bg-green-500 text-white hover:bg-green-600':
+                coordForm.form.valid,
+              'bg-gray-400 text-gray-700 cursor-not-allowed':
+                !coordForm.form.valid,
+            }" [disabled]="!coordForm.form.valid">
+            Valider Coordonnées
+          </button>
+        </form>
+      </div>
+
+      <!-- Méthode de récupération -->
+      <div *ngIf="activeTab === 1" class="max-w-lg mx-auto">
+        <h3 class="text-lg font-semibold">Méthode de récupération</h3>
+        <form (ngSubmit)="validateTab(1)" #pickupForm="ngForm">
+          <div class="mb-4">
+            <label class="block text-sm font-medium">Choisissez une méthode :</label>
+            <select class="w-full p-2 border rounded-lg" [(ngModel)]="pickupMethod" name="pickupMethod" required>
+              <option value="clickAndCollect">Click & Collect</option>
+              <option value="delivery">Livraison</option>
+            </select>
+            <div *ngIf="pickupMethod == 'delivery'" class="mt-4">
+              <div class="mb-4">
+                <label class="block text-sm font-medium">Adresse de livraison</label>
+                <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.address" name="address"
+                  required />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium">Code Postal</label>
+                <input type="text" class="w-full p-2 border rounded-lg" [(ngModel)]="userData.postalCode"
+                  name="postalCode" required />
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+            [disabled]="!pickupForm.form.valid">
+            Valider Méthode
+          </button>
+        </form>
+      </div>
+
+      <!-- Validation -->
+      <div *ngIf="activeTab === 2" class="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-md mx-auto space-y-4">
+        <!-- Titre de la section -->
+        <h3 class="text-2xl font-semibold text-gray-800">Validation</h3>
+
+        <!-- Détails de la commande -->
+        <div class="space-y-2 text-gray-600">
+          <p class="flex justify-between">
+            <span class="font-medium">Nom :</span>
+            <span>{{ userData.name }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span class="font-medium">Email :</span>
+            <span>{{ userData.email }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span class="font-medium">Addrese de livraison :</span>
+            <span>{{ userData.address }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span class="font-medium">Code Postal :</span>
+            <span>{{ userData.postalCode }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span class="font-medium">Méthode de récupération :</span>
+            <span>{{
+              pickupMethod === "clickAndCollect"
+              ? "Click & Collect"
+              : "Livraison"
+              }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span class="font-bold">Pour un total de : </span>
+            <span class="highlight highlight-black text-white">{{
+              total | currency: "EUR" : true
+              }}</span>
+          </p>
         </div>
 
-        <!-- Méthode de récupération -->
-        <div *ngIf="activeTab === 1" class="max-w-lg mx-auto">
-            <h3 class="text-lg font-semibold">Méthode de récupération</h3>
-            <form (ngSubmit)="validateTab(1)" #pickupForm="ngForm">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium">Choisissez une méthode :</label>
-                    <select class="w-full p-2 border rounded-lg" [(ngModel)]="pickupMethod" name="pickupMethod"
-                        required>
-                        <option value="clickAndCollect">Click & Collect</option>
-                        <option value="delivery">Livraison</option>
-                    </select>
-                </div>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                    [disabled]="!pickupForm.form.valid">
-                    Valider Méthode
-                </button>
-            </form>
+        <!-- Bouton de confirmation -->
+        <div class="flex justify-end">
+          <button
+            class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+            (click)="completeCheckout()">
+            Confirmer la commande
+          </button>
         </div>
-
-        <!-- Validation -->
-        <div *ngIf="activeTab === 2" class="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-md mx-auto space-y-4">
-            <!-- Titre de la section -->
-            <h3 class="text-2xl font-semibold text-gray-800">Validation</h3>
-        
-            <!-- Détails de la commande -->
-            <div class="space-y-2 text-gray-600">
-                <p class="flex justify-between">
-                    <span class="font-medium">Nom :</span>
-                    <span>{{ userData.name }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="font-medium">Email :</span>
-                    <span>{{ userData.email }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="font-medium">Méthode de récupération :</span>
-                    <span>{{ pickupMethod === 'clickAndCollect' ? 'Click & Collect' : 'Livraison' }}</span>
-                </p>
-                <p class="flex justify-between">
-                    <span class="font-bold">Pour un total de : </span>
-                    <span class="highlight highlight-black text-white">{{ total | currency:'EUR':true }}</span>
-                </p>
-            </div>
-        
-            <!-- Bouton de confirmation -->
-            <div class="flex justify-end">
-                <button
-                    class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
-                    (click)="completeCheckout()">
-                    Confirmer la commande
-                </button>
-            </div>
-        </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>
