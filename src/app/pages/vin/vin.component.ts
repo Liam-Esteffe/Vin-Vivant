@@ -58,6 +58,11 @@ export class VinComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  public get uniqueTypesFiltered(): WineType[] {
+    const allowedNames = ['Rouge', 'Blanc', 'Rosé', 'Moelleux', 'Magnum'];
+    return this.uniqueTypes.filter(type => allowedNames.includes(type.name));
+  }
+
   private initializeData(): void {
     this.isLoading = true;
     Promise.all([
