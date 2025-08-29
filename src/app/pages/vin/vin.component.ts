@@ -59,7 +59,7 @@ export class VinComponent implements OnInit, OnDestroy {
   }
 
   public get uniqueTypesFiltered(): WineType[] {
-    const allowedNames = ['Rouge', 'Blanc', 'Rosé', 'Moelleux', 'Magnum'];
+    const allowedNames = ['Rouge', 'Blanc', 'Rosé', 'Moelleux', 'Magnum', 'Orange/macération', "Bulles et Pet' Nat'"];
     return this.uniqueTypes.filter(type => allowedNames.includes(type.name));
   }
 
@@ -172,6 +172,7 @@ export class VinComponent implements OnInit, OnDestroy {
 
     // Filtre par région
     if (this.selectedRegion) {
+      // console.log(this.selectedRegion);
       filtered = filtered.filter(
         (product) => product.region.toString() === this.selectedRegion,
       );
@@ -185,6 +186,14 @@ export class VinComponent implements OnInit, OnDestroy {
     }
 
     this.products = filtered;
+    this.first = 0;
+  }
+
+  public clearFilters(): void {
+    this.searchValue = '';
+    this.selectedRegion = '';
+    this.selectedType = '';
+    this.products = [...this.allProducts];
     this.first = 0;
   }
 
